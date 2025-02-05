@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
+
+<xacro:macro name="short_standoff" params="name parent_link:=shell_link *origin">
+
+  <xacro:property name="link_name" value="${name}"/>
+  <xacro:property name="joint_name" value="${name}_joint"/>
+
+  <xacro:property name="mass" value="0.085"/>
+
+  <joint name="${joint_name}" type="fixed">
+    <parent link="${parent_link}"/>
+    <child link="${link_name}"/>
+    <xacro:insert_block name="origin"/>
+  </joint>
+
+  <link name="${link_name}">
+    <visual>
+      <origin rpy="0 0 0"/>
+      <geometry>
+       <mesh filename="package://turtlebot4_description/meshes/short_standoff.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.006" length="0.075"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia ixx="0.00000019604" ixy="0.0" ixz="0.0"
+	             iyy="0.00005262313" iyz="0.0" izz="0.00005262313" />
+    </inertial>
+  </link>
+
+  <gazebo reference="${joint_name}">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+  <gazebo reference="${link_name}">
+    <xacro:material_black/>
+  </gazebo>
+
+</xacro:macro>
+
+</robot>
